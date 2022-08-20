@@ -23,3 +23,10 @@ export const addUser = (data: API.AddUser) =>
     method: 'POST',
     data,
   });
+
+// 删除用户
+export const deleteUser = (id: number) =>
+  request({
+    url: `users/${id}`,
+    method: 'DELETE',
+  });
