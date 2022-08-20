@@ -1,28 +1,13 @@
-import {
-  PageContainer,
-  ProTable,
-  DrawerForm,
-  ProForm,
-  ProFormText,
-} from '@ant-design/pro-components';
-import type { ProColumns } from '@ant-design/pro-components';
-import { Card, Input, Col, Row, Button, message } from 'antd';
+import { PageContainer, DrawerForm, ProForm, ProFormText } from '@ant-design/pro-components';
+import { Card, Input, Col, Row, Button, message, Table } from 'antd';
 import { PlusOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useIntl } from 'umi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './index.less';
 import './index.less';
 import { getUserList, addUser } from '@/services/api';
 
-type TableList = {
-  id: number;
-  username: string;
-  email: string;
-  mobile: string;
-  role_name: string;
-};
-
-const columns: ProColumns<TableList>[] = [
+const columns = [
   {
     title: '姓名',
     dataIndex: 'username',
@@ -55,14 +40,35 @@ const columns: ProColumns<TableList>[] = [
   },
 ];
 
+type UserInfo = {
+  query: string;
+  pagenum: number;
+  pagesize: number;
+};
+
 export default function Users() {
   const intl = useIntl();
 
-  const [queryInfo, setQueryInfo] = useState<object>({
+  const [queryInfo, setQueryInfo] = useState<UserInfo>({
     query: '',
     pagenum: 1,
     pagesize: 5,
   });
+
+  const [userList, setUserList] = useState<any[]>([]);
+
+  const RequestEvent = async () => {
+    const { data: res } = await getUserList(queryInfo);
+    // console.log(res);
+    if (res.meta.status !== 200) return message.error('获取用户数据失败');
+
+    setUserList(res.data.users);
+  };
+
+  useEffect(() => {
+    RequestEvent();
+    console.log('11');
+  }, [queryInfo]);
 
   const FromChange = async (value: any) => {
     // console.log(value);
@@ -137,23 +143,12 @@ export default function Users() {
             </DrawerForm>
           </Col>
         </Row>
-        <ProTable
+        <Table
           columns={columns}
           bordered
-          search={false}
+          className={styles.table}
           rowKey="id"
-          params={queryInfo}
-          request={async params => {
-            // console.log(params);
-            const { data: res } = await getUserList(params);
-            console.log(res);
-            return {
-              data: res.data.users,
-              total: res.data.total,
-              success: true,
-            };
-          }}
-          pagination={{ pageSize: 5 }}
+          dataSource={userList}
         />
       </Card>
     </PageContainer>

@@ -12,7 +12,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = async ({ username, password }: any) => {
     const { data: res } = await login({ username, password });
-    console.log(res);
     const defaultError = intl.formatMessage({
       id: 'pages.login.error',
       defaultMessage: '账号或密码错误',
