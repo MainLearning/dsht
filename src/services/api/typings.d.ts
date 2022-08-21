@@ -10,4 +10,10 @@ declare namespace API {
     email: string;
     mobile: string;
   };
+
+  type CategoriesList = {
+    type: number;
+    pagenum: number;
+    pagesize: number;
+  };
 }

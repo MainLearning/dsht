@@ -30,3 +30,11 @@ export const deleteUser = (id: number) =>
     url: `users/${id}`,
     method: 'DELETE',
   });
+
+// 获取商品分类数据列表
+export const categoriesList = (data: API.CategoriesList) =>
+  request({
+    url: 'categories',
+    method: 'GET',
+    params: data,
+  });
