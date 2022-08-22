@@ -12,8 +12,8 @@ declare namespace API {
   };
 
   type CategoriesList = {
-    type: number;
-    pagenum: number;
-    pagesize: number;
+    type: any;
+    pagenum: any;
+    pagesize: any;
   };
 }

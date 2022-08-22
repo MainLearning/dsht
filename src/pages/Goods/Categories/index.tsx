@@ -1,23 +1,11 @@
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { PageContainer, ProTable, ModalForm, ProFormText } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Card, Row, Col, Button, Space, Tag } from 'antd';
-import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { FormOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { categoriesList } from '@/services/api';
-
-type QueryInfo = {
-  type: number;
-  pagenum: number;
-  pagesize: number;
-};
+import './index.less';
 
 export default function Categories() {
-  const [queryInfo, setQueryInfo] = useState<QueryInfo>({
-    type: 1,
-    pagenum: 1,
-    pagesize: 5,
-  });
-
   const columns: ProColumns<any>[] = [
     {
       title: '分类名称',
@@ -31,7 +19,7 @@ export default function Categories() {
           {record.cat_level === 0 ? (
             <Tag color="success">一级</Tag>
           ) : record.cat_level === 1 ? (
-            <Tag color="green">二级</Tag>
+            <Tag color="blue">二级</Tag>
           ) : (
             <Tag color="yellow">三级</Tag>
           )}
@@ -61,16 +49,33 @@ export default function Categories() {
           search={false}
           bordered
           rowKey="cat_id"
-          request={async () => {
+          pagination={{
+            pageSize: 5,
+            current: 1,
+          }}
+          request={async ({ current, pageSize }) => {
             const {
               data: { data },
-            } = await categoriesList(queryInfo);
+            } = await categoriesList({ type: 3, pagenum: current, pagesize: pageSize });
             // console.log(data);
             return {
               data: data.result,
               total: data.total,
             };
           }}
+          toolBarRender={() => [
+            <ModalForm
+              key="form"
+              title="添加分类"
+              trigger={
+                <Button key="button" icon={<PlusOutlined />} type="primary">
+                  添加分类
+                </Button>
+              }
+            >
+              <ProFormText width="md" name="name" placeholder="请输入分类名称" />
+            </ModalForm>,
+          ]}
         />
       </Card>
     </PageContainer>

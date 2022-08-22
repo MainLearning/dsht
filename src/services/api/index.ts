@@ -32,7 +32,7 @@ export const deleteUser = (id: number) =>
   });
 
 // 获取商品分类数据列表
-export const categoriesList = (data: API.CategoriesList) =>
+export const categoriesList = (data?: API.CategoriesList) =>
   request({
     url: 'categories',
     method: 'GET',
